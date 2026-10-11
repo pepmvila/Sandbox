@@ -58,7 +58,8 @@ html[data-selection-style=marker] .expression .orange{background:#ffd78b}html[da
 .expression .katex .green{color:var(--green)!important}.expression .katex .red{color:var(--red)!important}
 .expression .katex [role=button]:focus{outline:0;background:transparent}
 .expression .katex [role=button]:focus-visible{outline:1px dashed #8491a7;outline-offset:3px}
-.expression .katex svg{pointer-events:auto}
+/* La barra SVG de l’arrel se superposa al radicand: els clics han d’arribar als nombres de sota. */
+.expression .katex svg,.expression .katex svg *{pointer-events:none}
 
 .strategy-hint{margin-top:10px;padding:13px 16px;background:#fff4df;border-left:4px solid #da9125;border-radius:9px;color:#684710;font-size:14px;line-height:1.6}
 
