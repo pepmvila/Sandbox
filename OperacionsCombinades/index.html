@@ -53,7 +53,7 @@ html[data-selection-style=marker] .expression .orange{background:#ffd78b}html[da
 /* KaTeX provides all mathematical glyphs and spacing, without padding on tokens. */
 .expression .katex{font-size:1em;line-height:1.5;text-align:left}
 .expression .katex .number,.expression .katex .operation{padding:0!important;margin:0!important;min-width:0!important;border:0!important;box-shadow:none!important;background:transparent!important;outline:0!important;line-height:normal;display:inline}
-.expression .katex [data-num],.expression .katex [data-unary]{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.expression .katex [data-num],.expression .katex [data-unary],.expression .katex [data-binary]{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .expression .katex .orange{color:var(--orange)!important;outline:0!important;background:transparent!important}
 .expression .katex .green{color:var(--green)!important}.expression .katex .red{color:var(--red)!important}
 .expression .katex [role=button]:focus{outline:0;background:transparent}
@@ -158,11 +158,13 @@ function serialize(n,parentRank=0,right=false,parentType=''){
 function generateCandidate(mode,level,minSteps=0,minDepth=0,recent=[],budget=6000){
  const last=recent.length?parse(recent[recent.length-1]):null,lastShape=last?shape(last):null;
  const recentShapes=recent.slice(-2).map(s=>shape(parse(s)));
+ const preferDivision=Math.random()<0.65;
  for(let i=0;i<budget;i++){
   let raw=diversify(parse(source(mode,level)),mode);
   if(mode==='decimal'){const decimals=pick(level===0?[0,1,2]:level===1?[0,1,2,3]:[0,1,2,3,4]);const bases=[1,2,3,4,5,6,7,8,9,10,11,12];const answer=pick(bases)/10**decimals;const root=op('sqrt',num(answer*answer));raw=Math.random()<0.5?op('+',raw,root):op('+',root,raw);}
   const s=serialize(raw),n=parse(s);
   if(count(n)<minSteps||depth(n)<minDepth||depth(n)>[2,2,3][level]||!valid(n,mode)||recent.includes(s))continue;
+  if(preferDivision&&i<Math.floor(budget*0.75)&&!nodes(n).some(x=>x.type==='/'))continue;
   if(last&&shape(n)===lastShape)continue;
   if(i<3000&&recentShapes.includes(shape(n)))continue;
   return {tree:n,source:s,steps:count(n),depth:depth(n)};
@@ -217,17 +219,17 @@ function latex(n,interactive=false,highlight=null){
  const a=latex(n.a,interactive,highlight);let body;
  if(n.type==='sqrt'){const radicand=n.a.type==='group'?n.a.a:n.a;body='\\sqrt{'+latex(radicand,interactive,highlight)+'}';if(interactive)body=wrap('unary',n.id,body);}
  else if(n.type==='^'){let b=latex(n.b,false,highlight);if(interactive)b=wrap('unary',n.id,b);body='{'+a+'}^{'+b+'}';}
- else body=a+{'+':'+','-':'-','*':'\\cdot ','/':'\\mathbin{:}'}[n.type]+latex(n.b,interactive,highlight);
+ else {let symbol={'+':'+','-':'-','*':'\\cdot ','/':'\\mathbin{:}'}[n.type];if(interactive)symbol=wrap('binary',n.id,symbol);body=a+symbol+latex(n.b,interactive,highlight);}
  return wrap('op',n.id,cls('operation'+green,body));
 }
 function render(n,interactive=false,highlight=null){
  return katex.renderToString(latex(n,interactive,highlight),{displayMode:false,output:'html',throwOnError:true,strict:false,trust:context=>['\\htmlData','\\htmlClass'].includes(context.command)});
 }
 function makeMathAccessible(row){
- row.querySelectorAll('[data-num], [data-unary]').forEach(el=>{
+ row.querySelectorAll('[data-num], [data-unary], [data-binary]').forEach(el=>{
   el.setAttribute('role','button');el.setAttribute('tabindex','0');
-  const node=Engine.find(state.tree,Number(el.dataset.num||el.dataset.unary));
-  el.setAttribute('aria-label',el.dataset.num?'Nombre '+num(node?.v||0):node?.type==='sqrt'?'Selecciona aquesta arrel':'Selecciona aquesta potència');
+  const node=Engine.find(state.tree,Number(el.dataset.num||el.dataset.unary||el.dataset.binary));
+  el.setAttribute('aria-label',el.dataset.num?'Nombre '+num(node?.v||0):el.dataset.binary?'Selecciona aquesta '+({'+':'suma','-':'resta','*':'multiplicació','/':'divisió'}[node?.type]||'operació'):node?.type==='sqrt'?'Selecciona aquesta arrel':'Selecciona aquesta potència');
  });
 }
 
@@ -313,6 +315,7 @@ function numberAtPoint(row,x,y){
 function selectMathTarget(target,event=null){
  if(!state||state.phase!=='select'||$('trophies').open||$('leave-dialog').open||!target.closest('.row.active'))return;
  const number=(event&&event.detail!==0?numberAtPoint(activeRow(),event.clientX,event.clientY):null)||target.closest('[data-num]');if(number){clickNumber(Number(number.dataset.num));return;}
+ const binary=target.closest('[data-binary]');if(binary){if(state.selected.length)resetSelection();const n=Engine.find(state.tree,Number(binary.dataset.binary));chooseOperation(n,[activeRow().querySelector('[data-op="'+n.id+'"]')]);return;}
  const unary=target.closest('[data-unary]');if(unary){if(state.selected.length)resetSelection();const n=Engine.find(state.tree,Number(unary.dataset.unary));chooseOperation(n,[activeRow().querySelector('[data-op="'+n.id+'"]')]);}
 }
 $('transcript').addEventListener('click',e=>selectMathTarget(e.target,e));
