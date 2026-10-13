@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f5f0">
+  <meta name="description" content="Sandbox: un espai per provar activitats de matemàtiques, experimentar i millorar.">
+  <title>Sandbox · Prova, aprèn, millora</title>
+  <style>
+    :root{color-scheme:light;--ink:#26372f;--muted:#606f66;--green:#306b50;--paper:#f6f5f0}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;min-height:100svh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper);display:flex;flex-direction:column}
+    .background{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background-image:radial-gradient(ellipse at 90% 8%,#dfeadd99,transparent 48%),radial-gradient(ellipse at 4% 95%,#f2dfbf77,transparent 42%),linear-gradient(#43574607 1px,transparent 1px),linear-gradient(90deg,#43574607 1px,transparent 1px);background-size:auto,auto,32px 32px,32px 32px}
+    .code{position:absolute;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#46604d14;white-space:pre;line-height:1.8;font-size:clamp(15px,2vw,22px);transform:rotate(-8deg)}
+    .code.one{top:9%;right:-35px}.code.two{left:-30px;bottom:8%;transform:rotate(7deg)}
+    header,main,footer{width:min(1040px,100% - 48px);margin-inline:auto}
+    header{padding-top:32px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.3px}
+    .brand-mark{display:grid;place-items:center;width:34px;height:34px;border:1px solid #9cad9f;border-radius:9px;font-family:ui-monospace,monospace;color:var(--green);background:#ffffff88}
+    .status{font-size:12px;letter-spacing:.04em;color:var(--muted);display:flex;align-items:center;gap:7px}
+    .dot{height:7px;width:7px;border-radius:50%;background:#bf8739}
+    main{flex:1;display:flex;flex-direction:column;justify-content:center;padding-block:72px}
+    .eyebrow{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;letter-spacing:.1em;color:var(--green);margin:0 0 16px}
+    h1{font-size:clamp(56px,10vw,104px);line-height:1;letter-spacing:-.065em;margin:0;font-weight:750}
+    h1 span{color:#9aab99}
+    .intro{max-width:580px;font-size:clamp(17px,2.5vw,20px);line-height:1.65;color:var(--muted);margin:24px 0 0}
+    .intro strong{color:var(--ink);font-weight:600}
+    nav{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:48px}
+    .card{position:relative;display:flex;flex-direction:column;padding:25px;min-height:245px;background:#ffffffd9;border:1px solid #dce1d8;border-radius:17px;text-decoration:none;color:inherit;box-shadow:0 4px 20px #293d2f04;transition:transform .18s,border-color .18s,box-shadow .18s}
+    .card:hover{transform:translateY(-5px);border-color:#8eaf99;box-shadow:0 12px 28px #293d2f0d}
+    .card:focus-visible{outline:3px solid var(--green);outline-offset:5px}
+    .icon{height:46px;width:46px;display:grid;place-items:center;background:#eaf1e9;color:#42674c;border-radius:12px}
+    .card:nth-child(2) .icon{background:#f6ecdc;color:#96753f}
+    .card:nth-child(3) .icon{background:#e9eef4;color:#5a748f}
+    svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+    h2{font-size:19px;letter-spacing:-.4px;margin:22px 0 9px;line-height:1.25}
+    .card p{font-size:14px;line-height:1.6;margin:0 0 24px;color:var(--muted)}
+    .action{margin-top:auto;display:flex;justify-content:space-between;align-items:center;color:var(--green);font-size:13px;font-weight:650}
+    .arrow{font-size:22px;line-height:1;transition:transform .18s}.card:hover .arrow{transform:translateX(4px)}
+    footer{padding:0 0 27px;display:flex;justify-content:space-between;gap:16px;color:var(--muted);font-size:12px;line-height:1.6}
+    .foot-code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#748474}
+    @media(max-width:720px){header,main,footer{width:calc(100% - 36px)}header{padding-top:22px}main{padding-block:54px}nav{grid-template-columns:1fr;gap:12px;margin-top:34px}.card{min-height:0;padding:22px;padding-left:87px}.icon{position:absolute;left:22px;top:22px;width:43px;height:43px}h2{margin:0 0 8px}.card p{margin-bottom:16px}.action{font-size:12px}footer{flex-direction:column;gap:4px}.code{opacity:.6}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}.card:hover{transform:none}}
+  </style>
+</head>
+<body>
+  <div class="background" aria-hidden="true"><div class="code one">while (aprenent) {
+  provar();
+  equivocar-se();
+  tornar-hi();
+}</div><div class="code two">&lt;idees en construcció /&gt;
+// cada prova ens acosta
+// una mica més a la solució
+{ intentar: una_altra_vegada }</div></div>
+  <header>
+    <div class="brand"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>Sandbox</div>
+    <span class="status"><span class="dot" aria-hidden="true"></span>En proves</span>
+  </header>
+  <main>
+    <p class="eyebrow">PROVA · APRÈN · MILLORA</p>
+    <h1>Sandbox<span>.</span></h1>
+    <p class="intro">Un espai per experimentar amb les matemàtiques.<br>Les activitats encara estan en construcció: <strong>entra, prova i torna-hi!</strong></p>
+    <nav aria-label="Activitats en proves">
+      <a class="card" href="Divisions/index.html">
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M5 14h18"/><circle cx="14" cy="7" r="1.5"/><circle cx="14" cy="21" r="1.5"/></svg></span>
+        <h2>Divisions</h2>
+        <p>Aprèn a calcular divisions amb divisors de dues o més xifres, pas a pas.</p>
+        <span class="action">Prova l’activitat <span class="arrow" aria-hidden="true">↗</span></span>
+      </a>
+      <a class="card" href="OperacionsCombinades/index.html">
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M5 8h8M9 4v8M18 8h6M5 19l7 7M12 19l-7 7M18 20h6M18 25h6"/></svg></span>
+        <h2>Operacions combinades</h2>
+        <p>Practica l’ordre de les operacions i resol els càlculs pas a pas.</p>
+        <span class="action">Prova l’activitat <span class="arrow" aria-hidden="true">↗</span></span>
+      </a>
+      <a class="card" href="Equacions/index.html">
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M4 9l8 10M12 9L4 19M17 11h8M17 17h8"/></svg></span>
+        <h2>Equacions</h2>
+        <p>Troba la incògnita i practica els passos per resoldre equacions.</p>
+        <span class="action">Prova l’activitat <span class="arrow" aria-hidden="true">↗</span></span>
+      </a>
+      <a class="card" href="PlantejamentSistemes/index.html">
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M8 3H6v8l-3 3 3 3v8h2M12 9h12M12 19h12M15 6v6M19 16l5 6M24 16l-5 6"/></svg></span>
+        <h2>Plantejament de sistemes</h2>
+        <p>Transforma les pistes d’un problema en un sistema d’equacions.</p>
+        <span class="action">Prova l’activitat <span class="arrow" aria-hidden="true">↗</span></span>
+      </a>
+      <a class="card" href="Divisibilitat/index.html">
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 28 28"><rect x="3" y="4" width="8" height="6" rx="1"/><path d="M7 10v5M7 15h14M7 15v4M21 15v4"/><rect x="3" y="19" width="8" height="6" rx="1"/><rect x="17" y="19" width="8" height="6" rx="1"/></svg></span>
+        <h2>Divisibilitat · 1r d’ESO</h2>
+        <p>Practica múltiples, divisors, nombres primers, descomposició factorial, MCD i mcm.</p>
+        <span class="action">Prova l’activitat <span class="arrow" aria-hidden="true">↗</span></span>
+      </a>
+      <a class="card" href="Polinomis3rRepas/index.html">
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M4 13l8 10M12 13L4 23M17 15h8M21 11v8M16 4h6l-6 5h6"/></svg></span>
+        <h2>3r ESO - Repàs Final del Tema 1 - Polinomis</h2>
+        <p>Repassa els continguts de polinomis per categories o practica amb el mode examen.</p>
+        <span class="action">Prova l’activitat <span class="arrow" aria-hidden="true">↗</span></span>
+      </a>
+    </nav>
+  </main>
+  <footer><span>Si alguna cosa falla, també forma part de l’experiment.</span><span class="foot-code">// versió en construcció</span></footer>
+</body>
+</html>
